@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTD Process — Barrett Henry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-hover: #222636;
+    --border: #2a2e3d;
+    --text: #e8e9ed;
+    --text-muted: #8b8fa3;
+    --accent-blue: #4a9eff;
+    --accent-green: #34d399;
+    --accent-amber: #fbbf24;
+    --accent-red: #f87171;
+    --accent-purple: #a78bfa;
+    --accent-cyan: #22d3ee;
+    --accent-pink: #f472b6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  /* ---- FLOW SECTION ---- */
+  .flow-section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding-left: 4px;
+  }
+
+  /* Capture → Process flowchart */
+  .flowchart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    min-width: 160px;
+    max-width: 200px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .flow-node:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-blue);
+  }
+
+  .flow-node .icon {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .flow-node .label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .flow-node .desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    color: var(--accent-blue);
+    font-size: 1.4rem;
+    padding-top: 20px;
+    font-weight: 700;
+  }
+
+  /* ---- DECISION TREE ---- */
+  .decision-tree {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+
+  .decision-tree h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent-amber);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tree {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 20px;
+    border-left: 2px solid var(--border);
+  }
+
+  .tree-branch {
+    position: relative;
+    padding: 12px 0 12px 28px;
+  }
+
+  .tree-branch::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 24px;
+    width: 20px;
+    height: 2px;
+    background: var(--border);
+  }
+
+  .tree-branch .question {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .tree-branch .outcomes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .outcome-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .outcome-yes { background: rgba(52, 211, 153, 0.12); color: var(--accent-green); }
+  .outcome-no { background: rgba(248, 113, 113, 0.12); color: var(--accent-red); }
+  .outcome-maybe { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); }
+  .outcome-action { background: rgba(74, 158, 255, 0.12); color: var(--accent-blue); }
+
+  /* ---- RHYTHM TABLE ---- */
+  .rhythm-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .rhythm-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 20px;
+    align-items: start;
+    transition: border-color 0.2s;
+  }
+
+  .rhythm-card:hover { border-color: var(--accent-blue); }
+
+  .freq-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 6px 0;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  .freq-realtime { background: rgba(52, 211, 153, 0.12); color: var(--accent-green); }
+  .freq-daily { background: rgba(74, 158, 255, 0.12); color: var(--accent-blue); }
+  .freq-weekly { background: rgba(167, 139, 250, 0.12); color: var(--accent-purple); }
+  .freq-monthly { background: rgba(244, 114, 182, 0.12); color: var(--accent-pink); }
+  .freq-quarterly { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); }
+  .freq-yearly { background: rgba(248, 113, 113, 0.12); color: var(--accent-red); }
+
+  .rhythm-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .rhythm-content p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .rhythm-content .checklist {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rhythm-content .checklist li {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .time-est {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* ---- WEEKLY REVIEW DETAIL ---- */
+  .weekly-review {
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.06), rgba(74, 158, 255, 0.06));
+    border: 1px solid var(--accent-purple);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+
+  .weekly-review h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent-purple);
+    margin-bottom: 6px;
+  }
+
+  .weekly-review .subtitle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+
+  .review-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .review-step {
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .review-step .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent-purple);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .review-step h5 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .review-step p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  /* ---- TIME BLOCK VISUAL ---- */
+  .timeblock-section {
+    margin-bottom: 40px;
+  }
+
+  .timeblock-section h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: var(--accent-cyan);
+  }
+
+  .timeblock {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0;
+  }
+
+  .tb-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 14px 12px 14px 0;
+    text-align: right;
+    border-right: 2px solid var(--border);
+    position: relative;
+  }
+
+  .tb-time::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .tb-block {
+    padding: 10px 0 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tb-bar {
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .tb-capture { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); border-left: 3px solid var(--accent-green); }
+  .tb-process { background: rgba(74, 158, 255, 0.15); color: var(--accent-blue); border-left: 3px solid var(--accent-blue); }
+  .tb-execute { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border-left: 3px solid var(--accent-amber); }
+  .tb-review { background: rgba(167, 139, 250, 0.15); color: var(--accent-purple); border-left: 3px solid var(--accent-purple); }
+  .tb-calls { background: rgba(244, 114, 182, 0.15); color: var(--accent-pink); border-left: 3px solid var(--accent-pink); }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header h1 { font-size: 1.6rem; }
+    .rhythm-card { grid-template-columns: 1fr; gap: 12px; }
+    .time-est { padding-top: 0; }
+    .review-steps { grid-template-columns: 1fr; }
+    .flow-arrow { display: none; }
+    .flowchart { flex-direction: column; align-items: center; }
+    .decision-tree { padding: 20px; }
+    .timeblock { grid-template-columns: 70px 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>GTD PROCESS MAP</h1>
+    <p>Getting Things Done — Rhythms, Frequencies & Time Estimates</p>
+  </header>
+
+  <!-- ====== CORE FLOW ====== -->
+  <div class="flow-section">
+    <div class="section-label">Core GTD Workflow</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <span class="icon">📥</span>
+        <div class="label">Capture</div>
+        <div class="desc">Collect everything into your inbox — ideas, tasks, notes, emails</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="icon">🧠</span>
+        <div class="label">Clarify</div>
+        <div class="desc">What is it? Is it actionable? What's the next action?</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="icon">📂</span>
+        <div class="label">Organize</div>
+        <div class="desc">Put it where it belongs — project, context, calendar, or reference</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="icon">🔍</span>
+        <div class="label">Reflect</div>
+        <div class="desc">Review your system regularly — daily, weekly, monthly</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="icon">⚡</span>
+        <div class="label">Engage</div>
+        <div class="desc">Do the right work at the right time with confidence</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== DECISION TREE ====== -->
+  <div class="decision-tree">
+    <h3>⚙️ Clarify: The Processing Decision Tree</h3>
+    <div class="tree">
+      <div class="tree-branch">
+        <div class="question">Is it actionable?</div>
+        <div class="outcomes">
+          <span class="outcome-tag outcome-no">No → Trash, Someday/Maybe, or Reference</span>
+          <span class="outcome-tag outcome-yes">Yes → Keep going ↓</span>
+        </div>
+      </div>
+      <div class="tree-branch">
+        <div class="question">Can it be done in &lt; 2 minutes?</div>
+        <div class="outcomes">
+          <span class="outcome-tag outcome-yes">Yes → Do it NOW</span>
+          <span class="outcome-tag outcome-no">No → Keep going ↓</span>
+        </div>
+      </div>
+      <div class="tree-branch">
+        <div class="question">Am I the right person to do it?</div>
+        <div class="outcomes">
+          <span class="outcome-tag outcome-no">No → Delegate it (Waiting For)</span>
+          <span class="outcome-tag outcome-yes">Yes → Keep going ↓</span>
+        </div>
+      </div>
+      <div class="tree-branch">
+        <div class="question">Does it have multiple steps?</div>
+        <div class="outcomes">
+          <span class="outcome-tag outcome-action">Yes → Create a Project + define Next Action</span>
+          <span class="outcome-tag outcome-action">No → Add as Next Action in context list</span>
+        </div>
+      </div>
+      <div class="tree-branch">
+        <div class="question">Does it need to happen on a specific date/time?</div>
+        <div class="outcomes">
+          <span class="outcome-tag outcome-maybe">Yes → Put it on the Calendar</span>
+          <span class="outcome-tag outcome-action">No → Context list (@ tags in Notion)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== RHYTHMS & FREQUENCIES ====== -->
+  <div class="section-label">GTD Rhythms & Frequencies</div>
+  <div class="rhythm-grid">
+
+    <!-- REAL-TIME -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-realtime">ALL DAY</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>📥 Capture</h4>
+        <p>Dump EVERYTHING into Notion inbox the moment it hits your brain. Don't organize — just capture. Voice memos, quick notes, screenshots, emails to self.</p>
+        <ul class="checklist">
+          <li>Notion Quick Capture</li>
+          <li>Voice memo</li>
+          <li>Email to self</li>
+          <li>Obsidian fleeting note</li>
+        </ul>
+      </div>
+      <div class="time-est">~30 sec<br>each</div>
+    </div>
+
+    <!-- DAILY: MORNING -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-daily">DAILY AM</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>🌅 Morning Startup (Process + Plan)</h4>
+        <p>Clear inbox. Process each item through the decision tree. Review today's calendar. Pick 3 Most Important Tasks (MITs). Time-block your day.</p>
+        <ul class="checklist">
+          <li>Empty Notion inbox</li>
+          <li>Process each item</li>
+          <li>Check calendar</li>
+          <li>Pick 3 MITs</li>
+          <li>Time-block</li>
+        </ul>
+      </div>
+      <div class="time-est">15–20 min<br>before 8am</div>
+    </div>
+
+    <!-- DAILY: EVENING -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-daily">DAILY PM</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>🌙 Evening Shutdown</h4>
+        <p>Clear inbox again. Review what got done. Move incomplete MITs to tomorrow. Capture any loose ends. Write tomorrow's top 3. Close the loops so your brain can rest.</p>
+        <ul class="checklist">
+          <li>Empty inbox</li>
+          <li>Review completed</li>
+          <li>Reschedule open items</li>
+          <li>Tomorrow's top 3</li>
+          <li>Brain dump</li>
+        </ul>
+      </div>
+      <div class="time-est">10–15 min<br>after 5pm</div>
+    </div>
+
+    <!-- WEEKLY -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-weekly">WEEKLY</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>🔁 Weekly Review (THE critical habit)</h4>
+        <p>The engine of GTD. Without this, the whole system falls apart. Block 60–90 min every Friday or Sunday. Non-negotiable. See detailed breakdown below.</p>
+        <ul class="checklist">
+          <li>Get clear</li>
+          <li>Get current</li>
+          <li>Get creative</li>
+          <li>Review all projects</li>
+          <li>Review Waiting For</li>
+          <li>Review Someday/Maybe</li>
+        </ul>
+      </div>
+      <div class="time-est">60–90 min<br>Fri or Sun</div>
+    </div>
+
+    <!-- MONTHLY -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-monthly">MONTHLY</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>📊 Monthly Review (Higher Altitude)</h4>
+        <p>Step back from tasks. Are projects moving the needle toward $15K/month? Review PM door count, Best Bay revenue, Vyrabyte pipeline. Review 30,000ft goals and Areas of Focus.</p>
+        <ul class="checklist">
+          <li>Revenue tracking</li>
+          <li>Project health check</li>
+          <li>Areas of Focus review</li>
+          <li>Kill/defer stale projects</li>
+          <li>Notion cleanup</li>
+        </ul>
+      </div>
+      <div class="time-est">60–120 min<br>1st of month</div>
+    </div>
+
+    <!-- QUARTERLY -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-quarterly">QUARTERLY</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>🎯 Quarterly Review (Goals & Vision)</h4>
+        <p>Review 1–2 year goals. Are you on track? Realign projects to goals. Update Someday/Maybe. Check the 40,000ft view: career, business direction, investments.</p>
+        <ul class="checklist">
+          <li>Goal progress review</li>
+          <li>Realign projects to goals</li>
+          <li>Prune Someday/Maybe</li>
+          <li>Strategic planning</li>
+        </ul>
+      </div>
+      <div class="time-est">2–3 hours<br>Jan/Apr/Jul/Oct</div>
+    </div>
+
+    <!-- ANNUAL -->
+    <div class="rhythm-card">
+      <div>
+        <div class="freq-badge freq-yearly">YEARLY</div>
+      </div>
+      <div class="rhythm-content">
+        <h4>🏔️ Annual Review (Life & Purpose)</h4>
+        <p>50,000ft view. Purpose, values, life direction. Is the business aligned with the life you want? Set next year's big rocks. Complete system audit and overhaul if needed.</p>
+        <ul class="checklist">
+          <li>Life purpose check</li>
+          <li>Annual goals</li>
+          <li>System audit</li>
+          <li>Full Notion overhaul</li>
+        </ul>
+      </div>
+      <div class="time-est">Half day<br>Dec/Jan</div>
+    </div>
+
+  </div>
+
+  <!-- ====== WEEKLY REVIEW DETAIL ====== -->
+  <div class="weekly-review">
+    <h3>🔁 Weekly Review — The Detailed Breakdown</h3>
+    <p class="subtitle">Block 60–90 min every Friday afternoon or Sunday evening. This is the #1 habit that makes GTD work.</p>
+    <div class="review-steps">
+      <div class="review-step">
+        <div class="step-num">PHASE 1</div>
+        <h5>Get Clear (20 min)</h5>
+        <p>Empty all inboxes — Notion, email, Obsidian, paper, phone notes, voicemails. Process every item through the decision tree. Get to zero.</p>
+      </div>
+      <div class="review-step">
+        <div class="step-num">PHASE 2</div>
+        <h5>Get Current (25 min)</h5>
+        <p>Review every active project — does each one have a clear Next Action? Review Next Actions lists. Review Waiting For list — follow up on anything overdue. Review calendar (past week + next 2 weeks). Review Someday/Maybe — anything ready to activate?</p>
+      </div>
+      <div class="review-step">
+        <div class="step-num">PHASE 3</div>
+        <h5>Get Creative (15 min)</h5>
+        <p>What new projects or ideas came up this week? Any new Someday/Maybe items? Brain dump anything floating in your head. Think about what would make next week great.</p>
+      </div>
+      <div class="review-step">
+        <div class="step-num">PHASE 4</div>
+        <h5>Plan Next Week (10 min)</h5>
+        <p>Identify your Big 3 for next week. Time-block major work sessions. Flag any deadlines or hard landscape items. Set your Monday morning MITs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SUGGESTED DAILY TIME BLOCKS ====== -->
+  <div class="timeblock-section">
+    <h3>⏰ Suggested Daily Time Blocks</h3>
+    <div class="timeblock">
+      <div class="tb-time">7:30 AM</div>
+      <div class="tb-block"><div class="tb-bar tb-process">Morning Startup — Process Inbox + Plan Day</div></div>
+      
+      <div class="tb-time">8:00 AM</div>
+      <div class="tb-block"><div class="tb-bar tb-calls">Calls & Client Follow-ups (AM Block)</div></div>
+      
+      <div class="tb-time">9:30 AM</div>
+      <div class="tb-block"><div class="tb-bar tb-execute">Deep Work — MIT #1 (revenue-generating)</div></div>
+
+      <div class="tb-time">11:00 AM</div>
+      <div class="tb-block"><div class="tb-bar tb-capture">Quick Inbox Sweep — Process New Captures</div></div>
+      
+      <div class="tb-time">11:15 AM</div>
+      <div class="tb-block"><div class="tb-bar tb-execute">Deep Work — MIT #2</div></div>
+      
+      <div class="tb-time">12:30 PM</div>
+      <div class="tb-block"><div class="tb-bar tb-capture" style="opacity:0.6;">Lunch + Capture Loose Ends</div></div>
+
+      <div class="tb-time">1:30 PM</div>
+      <div class="tb-block"><div class="tb-bar tb-execute">Deep Work — MIT #3 or Admin</div></div>
+
+      <div class="tb-time">3:00 PM</div>
+      <div class="tb-block"><div class="tb-bar tb-process">Batch Process — Email, Slack, Follow-ups</div></div>
+
+      <div class="tb-time">4:00 PM</div>
+      <div class="tb-block"><div class="tb-bar tb-calls">Calls & Client Follow-ups (PM Block)</div></div>
+
+      <div class="tb-time">5:00 PM</div>
+      <div class="tb-block"><div class="tb-bar tb-review">Evening Shutdown — Review + Plan Tomorrow</div></div>
+    </div>
+  </div>
+
+  <!-- ====== LEGEND ====== -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-green)"></div> Capture</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue)"></div> Process / Clarify</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-amber)"></div> Execute / Deep Work</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-purple)"></div> Review / Reflect</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-pink)"></div> Calls / Communication</div>
+  </div>
+
+  <footer>
+    GTD Process Map — Barrett Henry | Notion-based GTD System | Updated Feb 2026
+  </footer>
+
+</div>
+</body>
+</html>
